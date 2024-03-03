@@ -1,0 +1,13 @@
+.bench/
+.local/
+.vscode/
+.idea/
+
+bin/
+rinha-de-backend-2024-q1/
+out/
+
+.editorconfig
+.env
+docker-compose*
+Dockerfile*
