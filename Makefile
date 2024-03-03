@@ -26,8 +26,12 @@ rm: ## remove everything
 	@docker-compose down --volumes --remove-orphans
 
 .PHONY: build
-build: ## build and generate api binary
+build: ## build api
 	@go build -o out/api ./cmd/api/**.go
+
+.PHONY: buildlb
+buildlb: ## build load balancer
+	@go build -o out/lb ./cmd/load_balancer/**.go
 
 .PHONY: deps
 deps: ## download dependencies
@@ -37,11 +41,19 @@ deps: ## download dependencies
 run: ## run api locally
 	@go run ./cmd/api/...
 
+.PHONY: runlb
+runlb: ## run load balancer locally
+	@go run ./cmd/load_balancer/...
+
 .PHONY: prepare
 prepare:
 	@git clone --depth 1 --single-branch -b main https://github.com/zanfranceschi/rinha-de-backend-2024-q1.git
 	@wget -P $$RINHA_DIR https://repo1.maven.org/maven2/io/gatling/highcharts/gatling-charts-highcharts-bundle/$$RINHA_GATLING_VERSION/gatling-charts-highcharts-bundle-$$RINHA_GATLING_VERSION-bundle.zip
 	@unzip -d $$RINHA_DIR $$RINHA_DIR/gatling-charts-highcharts-bundle-$$RINHA_GATLING_VERSION-bundle.zip
+
+.PHONY: utest
+utest:
+	@go test -v -race ./cmd/...
 
 .PHONY: test
 test:

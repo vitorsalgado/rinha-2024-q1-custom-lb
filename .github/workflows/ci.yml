@@ -38,6 +38,9 @@ jobs:
       - name: build
         run: make build
 
+      - name: test
+        run: make test
+
   publish:
     name: publish
     runs-on: ubuntu-latest
@@ -50,9 +53,9 @@ jobs:
         run: |
           echo ${{ secrets.DOCKER_ACCESS_TOKEN }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
 
-      - name: publish bouncer
+      - name: publish load balancer
         run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/rinha-2024q1-lb -f Dockerfile.lb .
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/rinha-2024q1-lb -f Dockerfile.load_balancer .
           docker push ${{ secrets.DOCKER_USERNAME }}/rinha-2024q1-lb
 
   load-test:
@@ -93,24 +96,7 @@ jobs:
           path: ${{ env.RINHA_DIR }}/load-test/user-files/results/${{ env.GATLING_REPORT }}
           retention-days: 2
 
-      - name: deploy results
-        id: deployment
-        uses: actions/deploy-pages@v4
-
-  container-test:
-    name: container-test
-    runs-on: ubuntu-latest
-    needs: publish
-    steps:
-      - name: checkout
-        uses: actions/checkout@v4
-      
-      - name: test
-        run: |
-          docker-compose -f ./docker-compose-rinha-final.yml up -d
-          
-          for i in {1..20}; do
-            curl --fail http://localhost:9999/clientes/1/extrato && \
-            echo "" && \
-            break || sleep 2;
-          done
+      # TEMP
+      # - name: deploy results
+      #   id: deployment
+      #   uses: actions/deploy-pages@v4

@@ -1,8 +1,6 @@
 package main
 
-import (
-	"os"
-)
+import "github.com/vitorsalgado/rinha-2024-q1/internal/sys"
 
 const (
 	EnvAddr         = "ADDR"
@@ -16,17 +14,8 @@ type Config struct {
 
 func newConfig() Config {
 	config := Config{}
-	config.Addr = envStr(EnvAddr, ":8080")
-	config.DBConnString = envStr(EnvDBConnString, "postgresql://rinha:rinha@db:5432/rinha?sslmode=disable")
+	config.Addr = sys.EnvStr(EnvAddr, ":8080")
+	config.DBConnString = sys.EnvStr(EnvDBConnString, "postgresql://rinha:rinha@db:5432/rinha?sslmode=disable")
 
 	return config
-}
-
-func envStr(n, def string) string {
-	str := os.Getenv(n)
-	if len(str) == 0 {
-		return def
-	}
-
-	return str
 }
