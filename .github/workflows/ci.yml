@@ -73,7 +73,7 @@ jobs:
           java-version: 17
 
       - name: running everything
-        run: docker-compose up --build --force-recreate -d
+        run: docker-compose -f docker-compose-rinha-final.yml up --build --force-recreate -d
 
       - name: test
         run: |
@@ -84,7 +84,7 @@ jobs:
 
           echo GATLING_REPORT=$(ls $RINHA_DIR/load-test/user-files/results | sort | head -n 1) >> $GITHUB_ENV
 
-      - name: Fix permissions
+      - name: fix permissions
         run: |
           chmod -c -R +rX "_site/" | while read line; do
             echo "::warning title=Invalid file permissions automatically fixed::$line"
@@ -96,7 +96,6 @@ jobs:
           path: ${{ env.RINHA_DIR }}/load-test/user-files/results/${{ env.GATLING_REPORT }}
           retention-days: 2
 
-      # TEMP
-      # - name: deploy results
-      #   id: deployment
-      #   uses: actions/deploy-pages@v4
+      - name: deploy results
+        id: deployment
+        uses: actions/deploy-pages@v4
