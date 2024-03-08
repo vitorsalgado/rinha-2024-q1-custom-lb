@@ -11,6 +11,18 @@ Os resultados dos testes são publicados automaticamente neste **[site](https://
 - Load Balancer Próprio (Go)
 - PgBouncer
 
+## Sobre
+
+Alguns pontos sobre o projeto:  
+
+- api com std lib;
+- **load balancer** implementado em Go. a implementação é bem simples: basicamente um proxy TCP com um round-robin simples. [código fonte aqui](cmd/load_balancer). 
+- as operações de débito, crédito e extrato são feitas com apenas uma chamada ao banco, reduzindo o número de idas e vindas ao mesmo. No caso das operações de débito e crédito, foi utilizada uma function no Postgres que concentra a regra de negócio.
+- PGO (Performance Guided Optimization) para gerar um binário mais eficiente.
+- uso do componente PgBouncer para uma gestão mais eficiente de conexões com o banco.
+- _Envoy_ como load balancer.
+- GOMAXPROCS=1 (definido pela lib _automaxprocs_).
+
 ## Executando
 
 Para executar o projeto completo em um **docker compose** local, execute no seu terminal:
